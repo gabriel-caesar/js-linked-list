@@ -101,11 +101,10 @@ export class LinkedList {
   // removes the last element from the list
   pop() {
     const a = this.tail; // last node
-    const b = list.size - 2 // index of the node behind last node
+    const b = this.size - 2 // index of the node behind last node
     const nodeBehindTail = this.at(b);// the node behind last node
 
-    a.value = null; // "popping" last node
-    nodeBehindTail.nextNode = undefined;
+    nodeBehindTail.nextNode = undefined; // "popping" last node
     this.tail = nodeBehindTail; // new last node
     this.size--; // decrease list size
   };
