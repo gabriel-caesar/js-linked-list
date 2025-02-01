@@ -60,18 +60,18 @@ export class LinkedList {
   };
 
   getSize() {
-    return `List size is: ${this.size}`;
+    return this.size;
   };
 
   getHead() {
-    return `List head is: ${JSON.stringify(this.head)}`
+    return this.head;
   };
 
   getTail() {
-    return `List tail is: ${JSON.stringify(this.tail)}`;
+    return this.tail;
   };
 
-  at(index) {
+  at(index) { // returns a node for the given index
     let number = 0;
 
     // if there's no head
@@ -122,24 +122,28 @@ export class LinkedList {
   };
 
   find(value) { // returns the index of the node containing value if found
+
     let result;
-    for (let i = 0; i < this.size; i++) {
-      // this.at(index) returns a node and if that node.value
-      // equals find(value) then we print the index of that node
-      this.at(i).value === value 
-      ? result = i
-      : result = null;
-    };
-    return result;
+    let i = 0; // Initialize index
+
+    while (i < this.size) {
+      let node = this.at(i);
+      if (node && node.value === value) {
+          result = i; // Add matching node to result
+      };
+      i++; // Always increment i to avoid infinite loop
+    }
+
+    return result >= 0 ? result : -1;
   }
  
   toString() { // represents your LinkedList objects as strings
-    let result = `( ${this.head.value} ) ->`;
+    let result = `( ${JSON.stringify(this.head.value)} ) ->`;
     const size = this.size;
     for (let i = 0; i < this.size; i++) {
       
       if (this.at(i).nextNode) { 
-        result += ` ( ${this.at(i).nextNode.value} ) ->`;
+        result += ` ( ${JSON.stringify(this.at(i).nextNode.value)} ) ->`;
        } else {
         result += ` ${null}`
        }
@@ -172,10 +176,14 @@ export class LinkedList {
   };
 
   removeAt(index) {
-    if (index === 0) { // if index is the head
+    if (index === 0) { // if index is the head and not the only node
       // we, then, need to assign the head to the next node
       const newNode = this.at(index + 1);
       this.head = newNode;
+      // if list is ONE NODE long, the tail is the head (vice-versa)
+      if (this.size === 1) { 
+        this.tail = this.head;
+      };
       this.size--;
     } else if (index === this.size - 1) { // if index is the tail
       // we, then, need to assign the tail to the last node
@@ -188,4 +196,49 @@ export class LinkedList {
       this.size--;
     }
   };
+
+
+  // *******************ONLY USED FOR HASHMAP************************************
+
+  getNode(value) { 
+    let result = [];
+    let i = 0; // Initialize index
+
+    while (i < this.size) {
+      let node = this.at(i);
+      if (node && node.value.key === value) {
+          result.push(node.value); // Add matching node to result array
+      };
+      i++; // Always increment i to avoid infinite loop
+    }
+
+    return result.length > 0 ? result : null;
+  };
+
+
+  toValue() { // returns an array of node VALUES
+    let nodes = [];
+    for (let i = 0; i < this.size; i++) {
+      nodes.push(this.at(i).value.value);
+    };
+    return nodes;
+  };
+
+  toKey() { // returns an array of node KEYS
+    let nodes = [];
+    for (let i = 0; i < this.size; i++) {
+      nodes.push(this.at(i).value.key);
+    };
+    return nodes;
+  };
+
+  toEntry() { // returns an array of KEY-VALUE pairs
+    let pairs = [];
+    for (let i = 0; i < this.size; i++) {
+      pairs.push(`key${i}: ${this.at(i).value.key}`);
+      pairs.push(`value${i}: ${this.at(i).value.value}`);
+    };
+    return pairs;
+  };
+
 };
